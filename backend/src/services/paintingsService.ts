@@ -4,7 +4,7 @@ import axios from 'axios';
 import { RIJKSMUSEUM_KEY } from '../utils/config';
 import { RijksmuseumCollectionResponse } from '../types/rijksmuseum';
 
-const RIJKS_URL = 'https://www.rijksmuseum.nl/api/en';
+const RIJKS_URL = 'https://www.rijksmuseum.nl/api/nl';
 
 const paintingsRouter = Router();
 
