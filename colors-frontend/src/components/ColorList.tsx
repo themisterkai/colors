@@ -1,30 +1,31 @@
 import { useEffect, useState } from 'react';
-
-type RGBColor = [number, number, number];
+import paintingsService from '../services/paintings';
+import { RijksmuseumArtObject } from '../types/paintings';
 
 const ColorList = () => {
-  const [colors, setColors] = useState<RGBColor[]>([
-    [179, 151, 32],
-    [217, 207, 74],
-    [72, 92, 21],
-    [125, 68, 8],
-    [160, 160, 137],
-  ]);
+  const [colors, setColors] = useState<string[]>([]);
+  const [artObject, setArtObject] = useState<RijksmuseumArtObject | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const id = 'SK-A-2344';
 
-  // useEffect(() => {
-  //   return;
-  // }, []);
-
-  const rgbToHex = (rgb: RGBColor): string => {
-    const toHex = (value: number) => value.toString(16).padStart(2, '0');
-    return `#${toHex(rgb[0])}${toHex(rgb[1])}${toHex(rgb[2])}`;
-  };
+  useEffect(() => {
+    paintingsService.getPainting(id).then(painting => {
+      setColors(painting.palette);
+      setArtObject(painting.artObject);
+    });
+  }, []);
 
   return (
     <div>
       <h1>Color Palette</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      {artObject && artObject.webImage.url && (
+        <img
+          src={artObject.webImage.url}
+          alt={artObject.title}
+          style={{ maxHeight: '500px', width: 'auto', marginBottom: '20px' }}
+        />
+      )}
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {colors.map((color, index) => (
           <div
@@ -32,7 +33,7 @@ const ColorList = () => {
             style={{
               width: '100px',
               height: '100px',
-              backgroundColor: rgbToHex(color),
+              backgroundColor: color,
               margin: '5px',
               border: '1px solid #ccc',
             }}
